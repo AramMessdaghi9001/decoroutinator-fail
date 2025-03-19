@@ -1,3 +1,5 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 apply plugin: 'dev.reformator.stacktracedecoroutinator'
 apply plugin: 'com.gradleup.shadow'
 apply plugin: 'application'
@@ -6,6 +8,15 @@ tasks.assemble.dependsOn(tasks.shadowJar)
 
 dependencies {
     implementation project(':lib')
+}
+
+tasks.withType(ShadowJar.class) {
+    // Defer the resolution  of 'runtimeClasspath'. This is an issue in the shadow
+    // plugin that it automatically accesses the files in 'runtimeClasspath' while
+    // Gradle is building the task graph. The three lines below work around that.
+    inputs.files(project.configurations.runtimeClasspath)
+    configurations = []
+    doFirst { configurations = [project.configurations.runtimeClasspath] }
 }
 
 application {
