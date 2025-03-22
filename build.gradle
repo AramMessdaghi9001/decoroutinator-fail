@@ -28,3 +28,7 @@ dependencies {
 application {
     mainClass = 'org.example.MainKt'
 }
+
+stacktraceDecoroutinator {
+    transformedClassesConfigurations.exclude += ["compileClasspath", ".*CompileClasspath"]
+}
